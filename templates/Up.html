@@ -1,0 +1,51 @@
+<style>
+#toTop {
+ position:fixed;
+ z-index:9999;
+ {$settings.position_vertical|escape}:10px;
+ {$settings.position_horizontal|escape}:10px;
+ background: {$settings.background_color|escape};
+ border: {$settings.border_width|escape}px solid {$settings.border_color|escape};
+ padding: {$settings.padding|escape}px;
+ cursor: pointer;
+ color: {$settings.text_color|escape};
+ width:{$settings.width|escape}px;
+ height: {$settings.height|escape}px;
+ text-align: {$settings.text_align|escape};
+ opacity: {$settings.opacity|escape};
+ font-size: {$settings.font_size|escape}px; 
+ border-radius:{$settings.border_radius|escape}px;
+-webkit-border-radius:{$settings.border_radius|escape}px;
+-moz-border-radius:{$settings.border_radius|escape}px;
+-khtml-border-radius:{$settings.border_radius|escape}px;
+
+ display: block;
+}
+
+</style>
+<script>
+$(function(){
+  $.fn.scrollToTop=function(){
+    if($(window).scrollTop()!="0"){
+        $(this).fadeIn("slow")
+  }
+  var scrollDiv=$(this);
+  $(window).scroll(function(){
+    if($(window).scrollTop()=="0"){
+    $(scrollDiv).fadeOut("slow")
+    }else{
+    $(scrollDiv).fadeIn("slow")
+  }
+  });
+    $(this).click(function(){
+      $("html, body").animate({
+        scrollTop:0
+        },"slow")
+    })
+  }
+});
+$(function() {
+    $("#toTop").scrollToTop();
+    });
+</script>
+<span id="toTop">{$settings.text}</span>
