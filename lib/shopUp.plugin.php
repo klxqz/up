@@ -23,7 +23,6 @@ class shopUpPlugin extends shopPlugin {
         if($this->getSettings('default_out')) {
             return self::display();
         }
-        
     }
 
     public static function display() {
