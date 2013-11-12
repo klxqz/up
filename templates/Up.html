@@ -48,4 +48,11 @@ $(function() {
     $("#toTop").scrollToTop();
     });
 </script>
-<span id="toTop">{$settings.text}</span>
+<span id="toTop">
+    {if $img_exists}
+    <img src="{$wa_url}wa-data/public/shop/plugins/up/up.png" title="{$settings.text|escape}"/>
+    {else}
+    {$settings.text}
+    {/if}
+    
+</span>

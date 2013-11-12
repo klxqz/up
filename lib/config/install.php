@@ -1,0 +1,20 @@
+<?php
+$plugin_id = array('shop', 'up');
+$app_settings_model = new waAppSettingsModel();
+$app_settings_model->set($plugin_id, 'status', '1');
+$app_settings_model->set($plugin_id, 'default_output', '1');
+$app_settings_model->set($plugin_id, 'text', '&uarr;');
+$app_settings_model->set($plugin_id, 'width', '100');
+$app_settings_model->set($plugin_id, 'height', '100');
+$app_settings_model->set($plugin_id, 'position_horizontal', 'right');
+$app_settings_model->set($plugin_id, 'position_vertical', 'bottom');
+$app_settings_model->set($plugin_id, 'text_align', 'center');
+$app_settings_model->set($plugin_id, 'text_color', '#666666');
+$app_settings_model->set($plugin_id, 'font_size', '36');
+$app_settings_model->set($plugin_id, 'background_color', '#F4FFBF');
+$app_settings_model->set($plugin_id, 'opacity', '0.8');
+$app_settings_model->set($plugin_id, 'padding', '5');
+$app_settings_model->set($plugin_id, 'border_radius', '5');
+$app_settings_model->set($plugin_id, 'border_width', '1');
+$app_settings_model->set($plugin_id, 'border_color', '#CCCCCC');
+$app_settings_model->set($plugin_id, 'use_img', '0');

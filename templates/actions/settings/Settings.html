@@ -1,0 +1,258 @@
+<script src="{$wa_url}wa-content/js/jquery-plugins/fileupload/jquery.iframe-transport.js"></script>
+<script src="{$wa_url}wa-content/js/jquery-plugins/fileupload/jquery.fileupload.js"></script>
+{literal}
+<script>
+
+    $(function() {
+        'use strict';
+        // Change this to the location of your server-side upload handler:
+        var url = '?plugin=up&action=save';
+        $('.fileupload').fileupload({
+            url: url,
+            dataType: 'json',
+            done: function(e, data) {
+
+                if (data.result.status == 'ok') {
+                    $('#img_preview').html('<img src="' + data.result.data.preview + '?' + Math.random() + '" />');
+
+                } else if (data.result.status == 'fail') {
+                    $('#response').css('color', 'red');
+                    $('#response').text(data.result.errors[0][0]);
+                }
+
+            },
+            fail: function(e, data) {
+                $('#response').css('color', 'red');
+                $('#response').html(data.jqXHR.responseText);
+            },
+        });
+
+
+
+    });
+</script>
+{/literal}
+<h1>Вверх</h1>
+<div     class="fields form">
+    <form action="?plugin=up&action=save" method="post" id="plugins-settings-form">
+        {$wa->csrf()}
+
+
+        {literal}
+        <p>{shopUpPlugin::display()} - Код хелпера вывода</p>
+        {/literal}
+        <p class="gray">
+            <i class="icon16 exclamation"></i>
+            Используя этот код Вы можете осуществить вывод "Прокрутки вверх" в любом месте вашей темы оформления, это позволяет избавиться от привязки к конкретным местам вывода плагина
+        </p>
+
+
+
+        <div class="field">
+            <div class="name">
+                Статус плагина
+            </div>
+            <div class="value">
+                <select name="shop_up[status]">
+                    <option {if $settings.status == 1} selected="selected"{/if} value="1">Включен</option>
+                    <option {if $settings.status == 0} selected="selected"{/if} value="0">Выключен</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Вывод по умолчанию
+            </div>
+            <div class="value">
+                <select name="shop_up[default_out]">
+                    <option {if $settings.status == 1} selected="selected"{/if} value="1">Включен</option>
+                    <option {if $settings.status == 0} selected="selected"{/if} value="0">Выключен</option>
+                </select>
+                {literal}
+                <p class="hint">Если включено плагин автоматически выводится на экран, если в этом режиме у вас возникли какие-то проблемы, тогда воспользуйтесь хелпером вывод {shopUpPlugin::display()} - разместите этот код в файле index.html перед закрывающимся тегом &lt;/body&gt;</p>
+                {/literal}
+            </div>
+        </div>
+
+
+        <div class="field">
+            <div class="name">
+                Текст
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[text]" value="{$settings.text|escape}"  />
+
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Ширина
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[width]" value="{$settings.width|escape}"  />
+                <div class="hint">Ширина блока в пикселях</div>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Высота
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[height]" value="{$settings.height|escape}"  />
+                <div class="hint">Высота блока в пикселях</div>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Размещение по горизонтали
+            </div>
+            <div class="value">
+                <select name="shop_up[position_horizontal]">
+                    <option {if $settings.position_horizontal == 'right'} selected="selected"{/if} value="right">Справа</option>
+                    <option {if $settings.position_horizontal == 'left'} selected="selected"{/if} value="left">Слева</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Размещение по вертикале
+            </div>
+            <div class="value">
+                <select name="shop_up[position_vertical]">
+                    <option {if $settings.position_vertical == 'top'} selected="selected"{/if} value="top">Сверху</option>
+                    <option {if $settings.position_vertical == 'bottom'} selected="selected"{/if} value="bottom">Снизу</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Выравнивание текста
+            </div>
+            <div class="value">
+                <select name="shop_up[text_align]">
+                    <option {if $settings.text_align == 'center'} selected="selected"{/if} value="center">По центру</option>
+                    <option {if $settings.text_align == 'justify'} selected="selected"{/if} value="justify">По ширине</option>
+                    <option {if $settings.text_align == 'left'} selected="selected"{/if} value="left">По левому краю</option>
+                    <option {if $settings.text_align == 'right'} selected="selected"{/if} value="right">По правому краю</option>
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Цвет текста
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[text_color]" value="{$settings.text_color|escape}"  />
+                <div class="hint">Цвет в шестнадцатиричном виде #000000, http://getcolor.ru/</div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Размер текста
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[font_size]" value="{$settings.font_size|escape}"  />
+                <div class="hint">Размер текста в пикселях</div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Цвет фона
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[background_color]" value="{$settings.background_color|escape}"  />
+                <div class="hint">Цвет в шестнадцатиричном виде #000000, http://getcolor.ru/, none - прозрачный фон</div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Прозрачность
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[opacity]" value="{$settings.opacity|escape}"  />
+                <div class="hint">1 - непрозрачный, 0 - полностью прозрачный</div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Оступы
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[padding]" value="{$settings.padding|escape}"  />
+                <div class="hint">Отступы от текста по бокам в пикселях</div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Радиус закругления углов
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[border_radius]" value="{$settings.border_radius|escape}"  />
+                <div class="hint">0 - без закругления</div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Толщина бордюра
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[border_width]" value="{$settings.border_width|escape}"  />
+                <div class="hint">в пикселях</div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">
+                Цвет бордюра
+            </div>
+            <div class="value">
+                <input type="text" name="shop_up[border_color]" value="{$settings.border_color|escape}"  />
+                <div class="hint">Цвет в шестнадцатиричном виде #000000, http://getcolor.ru/</div>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Использовать изображение вместо текста
+            </div>
+            <div class="value">
+                <input type="hidden" name="shop_up[use_img]" value="0"/>
+                <input type="checkbox" name="shop_up[use_img]" value="1" {if $settings.use_img} checked="checked"{/if} />
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="name">
+                Изображение
+            </div>
+            <div class="value">
+                <div id="img_preview">
+                    {if $img_exists}
+                    <img src="{$wa_url}wa-data/public/shop/plugins/up/up.png"/>
+                    {/if}
+                </div>
+                <a class="fileinput-button" id="s-upload-images-link" href="javascript:void(0);" style="overflow: hidden;display:block;">
+                    <i class="icon16 upload"></i>Выберите изображение<input class="fileupload" type="file" name="img">
+                </a>
+                <div id="response"></div>
+            </div>
+        </div>
+
+
+
+
+        <div class="field">
+            <div class="value submit">
+                <input type="submit" class="button green" value="Сохранить">
+                <span id="plugins-settings-form-status" style="display:none">
+                    <i style="vertical-align:middle" class="icon16 yes"></i> [`Saved`]
+                </span>
+            </div>
+        </div>
+    </form>
+</div>
