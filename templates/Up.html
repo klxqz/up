@@ -1,58 +1,62 @@
 <style>
-#toTop {
- position:fixed;
- z-index:9999;
- {$settings.position_vertical|escape}:10px;
- {$settings.position_horizontal|escape}:10px;
- background: {$settings.background_color|escape};
- border: {$settings.border_width|escape}px solid {$settings.border_color|escape};
- padding: {$settings.padding|escape}px;
- cursor: pointer;
- color: {$settings.text_color|escape};
- width:{$settings.width|escape}px;
- height: {$settings.height|escape}px;
- text-align: {$settings.text_align|escape};
- opacity: {$settings.opacity|escape};
- font-size: {$settings.font_size|escape}px; 
- border-radius:{$settings.border_radius|escape}px;
--webkit-border-radius:{$settings.border_radius|escape}px;
--moz-border-radius:{$settings.border_radius|escape}px;
--khtml-border-radius:{$settings.border_radius|escape}px;
-
- display: block;
-}
+    #toTop {
+        position:fixed;
+        z-index:9999;
+        {$settings.position_vertical|escape}:10px;
+        {$settings.position_horizontal|escape}:10px;
+        background: {$settings.background_color|escape};
+        border: {$settings.border_width|escape}px solid {$settings.border_color|escape};
+        padding: {$settings.padding|escape}px;
+        cursor: pointer;
+        color: {$settings.text_color|escape};
+        width:{$settings.width|escape}px;
+        height: {$settings.height|escape}px;
+        text-align: {$settings.text_align|escape};
+        opacity: {$settings.opacity|escape};
+        font-size: {$settings.font_size|escape}px; 
+        border-radius:{$settings.border_radius|escape}px;
+        -webkit-border-radius:{$settings.border_radius|escape}px;
+        -moz-border-radius:{$settings.border_radius|escape}px;
+        -khtml-border-radius:{$settings.border_radius|escape}px;
+        display: block;
+    }
 
 </style>
 <script>
-$(function(){
-  $.fn.scrollToTop=function(){
-    if($(window).scrollTop()!="0"){
-        $(this).fadeIn("slow")
-  }
-  var scrollDiv=$(this);
-  $(window).scroll(function(){
-    if($(window).scrollTop()=="0"){
-    $(scrollDiv).fadeOut("slow")
-    }else{
-    $(scrollDiv).fadeIn("slow")
-  }
-  });
-    $(this).click(function(){
-      $("html, body").animate({
-        scrollTop:0
-        },"slow")
-    })
-  }
-});
-$(function() {
-    $("#toTop").scrollToTop();
+    jQuery(document).ready(function() {
+        var IE = '\v' == 'v';
+        jQuery("#toTop").hide();
+        jQuery(function() {
+            jQuery(window).scroll(function() {
+                if (!IE) {
+                    if (jQuery(this).scrollTop() > 100) {
+                        jQuery('#toTop').fadeIn();
+                    } else {
+                        jQuery('#toTop').fadeOut();
+                    }
+                }
+                else {
+                    if (jQuery(this).scrollTop() > 100) {
+                        jQuery('#toTop').show();
+                    } else {
+                        jQuery('#toTop').hide();
+                    }
+                }
+            });
+            jQuery('#toTop').click(function() {
+                jQuery('body,html').animate({
+                    scrollTop: 0
+                }, 800);
+                return false;
+            });
+        });
     });
+
 </script>
 <span id="toTop">
-    {if $img_exists}
-    <img src="{$wa_url}wa-data/public/shop/plugins/up/up.png" title="{$settings.text|escape}"/>
+    {if $settings.use_img && $img_exists}
+        <img src="{$wa_url}wa-data/public/shop/plugins/up/up.png" title="{$settings.text|escape}"/>
     {else}
-    {$settings.text}
+        {$settings.text}
     {/if}
-    
 </span>

@@ -5,7 +5,7 @@ $app_settings_model->set($plugin_id, 'status', '1');
 $app_settings_model->set($plugin_id, 'default_output', '1');
 $app_settings_model->set($plugin_id, 'text', '&uarr;');
 $app_settings_model->set($plugin_id, 'width', '100');
-$app_settings_model->set($plugin_id, 'height', '100');
+$app_settings_model->set($plugin_id, 'height', '50');
 $app_settings_model->set($plugin_id, 'position_horizontal', 'right');
 $app_settings_model->set($plugin_id, 'position_vertical', 'bottom');
 $app_settings_model->set($plugin_id, 'text_align', 'center');

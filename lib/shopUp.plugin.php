@@ -20,7 +20,7 @@ class shopUpPlugin extends shopPlugin {
     }
 
     public function frontendFooter() {
-        if($this->getSettings('default_out')) {
+        if ($this->getSettings('default_output')) {
             return self::display();
         }
     }
@@ -36,7 +36,13 @@ class shopUpPlugin extends shopPlugin {
 
             $view->assign('img_exists', $img_exists);
             $view->assign('settings', $up->getSettings());
-            $template_path = wa()->getAppPath('plugins/up/templates/Up.html', 'shop');
+
+            $tmp_path = 'plugins/up/templates/Up.html';
+            $template_path = wa()->getDataPath($tmp_path, false, 'shop', true);
+            if (!file_exists($template_path)) {
+                $template_path = wa()->getAppPath($tmp_path, 'shop');
+            }
+
             $html = $view->fetch($template_path);
             return $html;
         }

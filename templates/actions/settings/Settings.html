@@ -1,37 +1,15 @@
 <script src="{$wa_url}wa-content/js/jquery-plugins/fileupload/jquery.iframe-transport.js"></script>
 <script src="{$wa_url}wa-content/js/jquery-plugins/fileupload/jquery.fileupload.js"></script>
-{literal}
-<script>
-
-    $(function() {
-        'use strict';
-        // Change this to the location of your server-side upload handler:
-        var url = '?plugin=up&action=save';
-        $('.fileupload').fileupload({
-            url: url,
-            dataType: 'json',
-            done: function(e, data) {
-
-                if (data.result.status == 'ok') {
-                    $('#img_preview').html('<img src="' + data.result.data.preview + '?' + Math.random() + '" />');
-
-                } else if (data.result.status == 'fail') {
-                    $('#response').css('color', 'red');
-                    $('#response').text(data.result.errors[0][0]);
-                }
-
-            },
-            fail: function(e, data) {
-                $('#response').css('color', 'red');
-                $('#response').html(data.jqXHR.responseText);
-            },
-        });
-
-
-
-    });
-</script>
-{/literal}
+<style type="text/css">
+    #wa .CodeMirror{
+        border: 1px solid #eee;
+    }
+    .CodeMirror-scroll {
+        height: auto;
+        overflow-y: hidden;
+        overflow-x: auto;
+    }
+</style>
 <h1>Вверх</h1>
 <div     class="fields form">
     <form action="?plugin=up&action=save" method="post" id="plugins-settings-form">
@@ -39,7 +17,7 @@
 
 
         {literal}
-        <p>{shopUpPlugin::display()} - Код хелпера вывода</p>
+            <p>{shopUpPlugin::display()} - Код хелпера вывода</p>
         {/literal}
         <p class="gray">
             <i class="icon16 exclamation"></i>
@@ -65,12 +43,12 @@
                 Вывод по умолчанию
             </div>
             <div class="value">
-                <select name="shop_up[default_out]">
+                <select name="shop_up[default_output]">
                     <option {if $settings.status == 1} selected="selected"{/if} value="1">Включен</option>
                     <option {if $settings.status == 0} selected="selected"{/if} value="0">Выключен</option>
                 </select>
                 {literal}
-                <p class="hint">Если включено плагин автоматически выводится на экран, если в этом режиме у вас возникли какие-то проблемы, тогда воспользуйтесь хелпером вывод {shopUpPlugin::display()} - разместите этот код в файле index.html перед закрывающимся тегом &lt;/body&gt;</p>
+                    <p class="hint">Если включено плагин автоматически выводится на экран, если в этом режиме у вас возникли какие-то проблемы, тогда воспользуйтесь хелпером вывод {shopUpPlugin::display()} - разместите этот код в файле index.html перед закрывающимся тегом &lt;/body&gt;</p>
                 {/literal}
             </div>
         </div>
@@ -233,18 +211,31 @@
             <div class="value">
                 <div id="img_preview">
                     {if $img_exists}
-                    <img src="{$wa_url}wa-data/public/shop/plugins/up/up.png"/>
+                        <img src="{$wa_url}wa-data/public/shop/plugins/up/up.png"/>
                     {/if}
                 </div>
-                <a class="fileinput-button" id="s-upload-images-link" href="javascript:void(0);" style="overflow: hidden;display:block;">
-                    <i class="icon16 upload"></i>Выберите изображение<input class="fileupload" type="file" name="img">
-                </a>
+                <input class="fileupload" type="file" name="img">
+                <a id="deleteButton" {if !$img_exists}style="display:none;"{/if} href="javascript:void(0);"><i class="icon16 delete" title="Удалить"></i>Удалить</a>
+
                 <div id="response"></div>
             </div>
         </div>
 
+        <div class="field">
+            <div class="name">Шаблон<br /><span class="hint">HTML + Smarty</span></div>
+            <div class="value no-shift">
+                <div id="s-editor-core-wrapper">
+                    <textarea id="sf-template" class="body" name="template">{$template}</textarea>
+                </div>
+            </div>
 
-
+            {if $change_tpl}
+                <div class="value">
+                    <p class="gray"><i class="icon16 exclamation"></i>Внимание! Шаблон по умолчанию был изменен</p>
+                    <input type="checkbox" name="shop_up[reset_tpl]" value="1"  /> - Сбросить изменения, использовать шаблон по умолчанию
+                </div>
+            {/if}
+        </div>
 
         <div class="field">
             <div class="value submit">
@@ -256,3 +247,81 @@
         </div>
     </form>
 </div>
+
+
+<script type="text/javascript">
+
+    $(function() {
+        'use strict';
+        // Change this to the location of your server-side upload handler:
+        var url = '?plugin=up&action=save';
+        $('.fileupload').fileupload({
+            url: url,
+            dataType: 'json',
+            done: function(e, data) {
+
+                if (data.result.status == 'ok') {
+                    $('#img_preview').html('<img src="' + data.result.data.preview + '?' + Math.random() + '" />');
+
+                } else if (data.result.status == 'fail') {
+                    $('#response').css('color', 'red');
+                    $('#response').text(data.result.errors[0][0]);
+                }
+
+            },
+            fail: function(e, data) {
+                $('#response').css('color', 'red');
+                $('#response').html(data.jqXHR.responseText);
+            },
+        });
+
+        $('#deleteButton').click(function() {
+            var _csrf = $('input[name=_csrf]').val();
+            var category_id = $('input[name=category_id]').val();
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    _csrf: _csrf,
+                    delete: 1
+                }
+            }).done(function(response) {
+
+                $("#img_preview").html('');
+                $("#response").text(response.data.message);
+                $("#deleteButton").hide();
+            });
+        });
+    });
+    $(function() {
+        var c = CodeMirror.fromTextArea(document.getElementById('sf-template'), {
+            mode: "text/html",
+            tabMode: "indent",
+            height: "dynamic",
+            lineWrapping: true
+        });
+        $("#sf-template").change(function() {
+            c.setValue($(this).val())
+        });
+        $("#sf-settings").submit(function() {
+            var f = $(this);
+            $.post(f.attr('action'), f.serialize(), function(response) {
+                if (response.status == 'ok') {
+                    $('#wa-design-button').removeClass('red').addClass('green');
+                    $("#wa-editor-status-fail").hide()
+                    $("#wa-editor-status-ok span").html(response.data.message);
+                    $("#wa-editor-status-ok").fadeIn('slow', function() {
+                        $(this).fadeOut(1000);
+                    });
+                } else {
+                    $('#wa-design-button').removeClass('green').addClass('red');
+                    $("#wa-editor-status-ok").hide();
+                    $("#wa-editor-status-fail span").html(response.errors.join(', '));
+                    $("#wa-editor-status-fail").fadeIn('slow');
+                }
+            }, "json")
+            return false;
+        });
+    });
+</script>
